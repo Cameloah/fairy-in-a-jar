@@ -1,10 +1,15 @@
 #include <Arduino.h>
 #include <FastLED.h>
+#include "modules/twinkle.h"
 
 //_______LEDs____________________________________________________________________________________
   
   //pin LED strip is connected to
   #define LED_PIN        5
+  
+  #define LED_TYPE   WS2812B
+  
+  #define COLOR_ORDER   RGB
 
   //number of LEDs connected
   #define LED_NUM        18
@@ -13,9 +18,11 @@
   //create the FastLED array containing led colors
   CRGB leds[LED_NUM];
 
-//_______Microphone______________________________________________________________________________
+//_______Periferals______________________________________________________________________________
 
-  //pin microphone sinput is connected to
+  //pin switch is connected to
+  #define SWITCH_PIN      3
+  //pin microphone input is connected to
   #define ANALOG_READ     1
 
   //variable microphone input is stored in
@@ -73,6 +80,10 @@
 void setup() {
   //initialize serial communication
   Serial.begin(250000);
+
+  //_____Periferals______________________________________________________________________________
+    //switch input
+    pinMode(SWITCH_PIN, INPUT);
   
   //_____LEDs____________________________________________________________________________________
     //set color increments
@@ -86,7 +97,10 @@ void setup() {
 
 
     //start up FastLED object
-    FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_NUM);
+    FastLED.addLeds<LED_TYPE,LED_PIN,COLOR_ORDER>(leds, LED_NUM);
+
+    //initializer
+    twinkle_init();
 
     //clear all leds
     for (int i = 0; i < LED_NUM; i++)
@@ -104,7 +118,10 @@ void setup() {
 
 void loop() {
 
-  //_____Microphone______________________________________________________________________________
+  //_____Mode____________________________________________________________________________________
+  switch(digitalRead(SWITCH_PIN)) {
+    case HIGH:
+        //_____Microphone______________________________________________________________________________
 
     //read analog value
     sensor_input = analogRead(ANALOG_READ);
@@ -183,7 +200,7 @@ void loop() {
     led_level = map(inputFiltered, 0, 600, 0, LED_NUM);
     led_avg_level = map(value_avg, 0, 600, 0, LED_NUM) + 4;
     
-    for (int i = 0; i < LED_NUM; i++) 
+    for (int i = 0; i < LED_NUM; i++) {
     //The leds we want to show
       if (i < led_level && i > led_avg_level) {
         if (leds[i].r + color_peak_1.r > 255)
@@ -236,6 +253,18 @@ void loop() {
       else {
         leds[i] = CRGB(leds[i].r/fade_scale, leds[i].g/fade_scale, leds[i].b/fade_scale);
       }
+
+      break;
+    }
+
+    case LOW:
+      twinkle_update(leds);
+      break;
+
+    default:
+      return;
+  }
+
 
     //execute led colors
     FastLED.show();

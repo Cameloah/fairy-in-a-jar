@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include "modules/music_visualisation.h"
+#include "modules/twinkle.h"
 #include "led_config.h"
 
 
@@ -14,14 +15,22 @@
 //create the FastLED array containing led colors
 CRGBArray<LED_NUM> leds;
 
+#define PIN_SWITCH                            3
+
+
 
 
 void setup() {
   //initialize serial communication
   Serial.begin(250000);
 
+  //periferals
+  pinMode(PIN_SWITCH, INPUT);
+
   //initialize music visualisation
   music_vis_init();
+  //initialize twinkle effect
+  twinkle_init();
   
   //start up FastLED object
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_NUM);
@@ -40,7 +49,19 @@ void setup() {
 
 void loop() {
 
-  music_vis_update(leds);
+  switch(digitalRead(PIN_SWITCH)) {
+    case HIGH:
+      music_vis_update(leds);
+      break;
+
+    case LOW:
+      twinkle_update(leds);
+      break;
+
+    default:
+      return;
+  }
+  
 
   //execute led colors
   FastLED.show();

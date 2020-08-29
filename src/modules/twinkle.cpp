@@ -1,10 +1,33 @@
 #include "modules/twinkle.h"
 
-//CRGBArray<NUM_LEDS> leds;
+
+// Background color for 'unlit' pixels
+// Can be set to CRGB::Black if desired.
+CRGB gBackgroundColor = CRGB::Black; 
+// Example of dim incandescent fairy light background color
+// CRGB gBackgroundColor = CRGB(CRGB::FairyLight).nscale8_video(16);
+
+// Add or remove palette names from this list to control which color
+// palettes are used, and in what order.
+const TProgmemRGBPalette16* ActivePaletteList[] = {
+  &RetroC9_p,
+  &BlueWhite_p,
+  &RainbowColors_p,
+  &FairyLight_p,
+  &RedGreenWhite_p,
+  &PartyColors_p,
+  &RedWhite_p,
+  &Snow_p,
+  &Holly_p,
+  &Ice_p  
+};
 
 
 CRGBPalette16 gCurrentPalette;
 CRGBPalette16 gTargetPalette;
+
+
+
 
 void twinkle_init() {
   delay( 1000 ); //safety startup delay
@@ -12,7 +35,7 @@ void twinkle_init() {
 }
 
 
-void twinkle_update(CRGBSet& L)
+void twinkle_update(CRGBSet& user_leds)
 {
   EVERY_N_SECONDS( SECONDS_PER_PALETTE ) { 
     chooseNextColorPalette( gTargetPalette ); 
@@ -22,7 +45,7 @@ void twinkle_update(CRGBSet& L)
     nblendPaletteTowardPalette( gCurrentPalette, gTargetPalette, 12);
   }
 
-  drawTwinkles( L);
+  drawTwinkles( user_leds);
   
 }
 

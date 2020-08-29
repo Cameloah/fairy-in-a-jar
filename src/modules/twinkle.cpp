@@ -12,7 +12,7 @@ void twinkle_init() {
 }
 
 
-void twinkle_update(CRGB& L)
+void twinkle_update(CRGBSet& L)
 {
   EVERY_N_SECONDS( SECONDS_PER_PALETTE ) { 
     chooseNextColorPalette( gTargetPalette ); 
@@ -22,7 +22,7 @@ void twinkle_update(CRGB& L)
     nblendPaletteTowardPalette( gCurrentPalette, gTargetPalette, 12);
   }
 
-  drawTwinkles( leds);
+  drawTwinkles( L);
   
 }
 

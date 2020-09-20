@@ -2,6 +2,7 @@
 #include <FastLED.h>
 #include "modules/music_visualisation.h"
 #include "modules/twinkle.h"
+#include "modules/ocean.h"
 #include "led_config.h"
 
 
@@ -14,6 +15,7 @@
   
 //create the FastLED array containing led colors
 CRGBArray<LED_NUM> leds;
+//CRGB leds[LED_NUM];
 
 #define PIN_SWITCH                            3
 
@@ -31,9 +33,11 @@ void setup() {
   music_vis_init();
   //initialize twinkle effect
   twinkle_init();
-  
+  //initialize ocean effect
+  ocean_init((CRGB**) &leds.leds);
+
   //start up FastLED object
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_NUM);
+  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, LED_NUM).setCorrection(TypicalLEDStrip);
 
   //clear all leds
     for (int i = 0; i < LED_NUM; i++)

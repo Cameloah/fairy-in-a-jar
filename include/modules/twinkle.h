@@ -72,15 +72,15 @@
 // Overall twinkle speed.
 // 0 (VERY slow) to 8 (VERY fast).  
 // 4, 5, and 6 are recommended, default is 4.
-#define TWINKLE_SPEED 4
+#define TWINKLE_SPEED 2
 
 // Overall twinkle density.
 // 0 (NONE lit) to 8 (ALL lit at once).  
 // Default is 5.
-#define TWINKLE_DENSITY 5
+#define TWINKLE_DENSITY 8
 
 // How often to change color palettes.
-#define SECONDS_PER_PALETTE  30
+#define SECONDS_PER_PALETTE  20
 // Also: toward the bottom of the file is an array 
 // called "ActivePaletteList" which controls which color
 // palettes are used; you can add or remove color palettes
@@ -101,27 +101,27 @@
 // A mostly red palette with green accents and white trim.
 // "CRGB::Gray" is used as white to keep the brightness more uniform.
 const TProgmemRGBPalette16 RedGreenWhite_p FL_PROGMEM =
-{  CRGB::Red, CRGB::Red, CRGB::Red, CRGB::Red, 
-   CRGB::Red, CRGB::Red, CRGB::Red, CRGB::Red, 
-   CRGB::Red, CRGB::Red, CRGB::Gray, CRGB::Gray, 
-   CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green };
+{  CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green,
+   CRGB::Green, CRGB::Green, CRGB::Green, CRGB::Green,
+   CRGB::Green, CRGB::Green, CRGB::Gray, CRGB::Gray,
+   CRGB::Red, CRGB::Red, CRGB::Red, CRGB::Red };
 
 // A mostly (dark) green palette with red berries.
 #define Holly_Green 0x00580c
 #define Holly_Red   0xB00402
 const TProgmemRGBPalette16 Holly_p FL_PROGMEM =
-{  Holly_Green, Holly_Green, Holly_Green, Holly_Green, 
-   Holly_Green, Holly_Green, Holly_Green, Holly_Green, 
-   Holly_Green, Holly_Green, Holly_Green, Holly_Green, 
+{  Holly_Green, Holly_Green, Holly_Green, Holly_Green,
+   Holly_Green, Holly_Green, Holly_Green, Holly_Green,
+   Holly_Green, Holly_Green, Holly_Green, Holly_Green,
    Holly_Green, Holly_Green, Holly_Green, Holly_Red 
 };
 
 // A red and white striped palette
 // "CRGB::Gray" is used as white to keep the brightness more uniform.
 const TProgmemRGBPalette16 RedWhite_p FL_PROGMEM =
-{  CRGB::Red,  CRGB::Red,  CRGB::Red,  CRGB::Red, 
-   CRGB::Gray, CRGB::Gray, CRGB::Gray, CRGB::Gray,
-   CRGB::Red,  CRGB::Red,  CRGB::Red,  CRGB::Red, 
+{  CRGB::Green,  CRGB::Green,  CRGB::Green,  CRGB::Green, 
+   CRGB::Green, CRGB::Green, CRGB::Gray, CRGB::Gray,
+   CRGB::Green,  CRGB::Green,  CRGB::Green,  CRGB::Green, 
    CRGB::Gray, CRGB::Gray, CRGB::Gray, CRGB::Gray };
 
 // A mostly blue palette with white accents.
@@ -205,12 +205,6 @@ CRGB computeOneTwinkle( uint32_t ms, uint8_t salt);
 // This function is like 'triwave8', which produces a 
 // symmetrical up-and-down triangle sawtooth waveform, except that this
 // function produces a triangle wave with a faster attack and a slower decay:
-//
-//     / \ 
-//    /     \ 
-//   /         \ 
-//  /             \ 
-//
 uint8_t attackDecayWave8( uint8_t i);
 
 // This function takes a pixel, and if its in the 'fading down'

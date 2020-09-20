@@ -13,7 +13,7 @@ CRGBPalette16 pacifica_palette_3 =
 
 CRGB* user_buffer;
 
-void ocean_update(CRGB* user_leds){
+void ocean_update(CRGBSet& user_leds){
   
   user_buffer = user_leds;
   EVERY_N_MILLISECONDS( 20) {

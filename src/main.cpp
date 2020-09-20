@@ -20,7 +20,15 @@ CRGBArray<LED_NUM> led_arr;
 
 #define PIN_SWITCH                            3
 
+#define EFFECT_DURATION_SEC                   10
+#define EFFECT_BLEND_IN_SEC                   5
 
+uint8_t module_current_index;
+#define EFFECT_MODULE_NUM                     2
+void (*module_update[EFFECT_MODULE_NUM])(CRGBSet&) = {
+        ocean_update,
+        twinkle_update
+};
 
 
 void setup() {
@@ -60,8 +68,13 @@ void loop() {
       break;
 
     case LOW:
-      twinkle_update(led_arr);
+      //twinkle_update(led_arr);
+
+      EVERY_N_SECONDS(EFFECT_DURATION_SEC) {
+        module_current_index = addmod8( module_current_index, 1, EFFECT_MODULE_NUM);
+      }
       
+      module_update[module_current_index] (led_arr);
       break;
 
     default:

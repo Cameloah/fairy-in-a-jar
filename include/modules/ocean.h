@@ -38,7 +38,7 @@ FASTLED_USING_NAMESPACE
 
 //void ocean_init(CRGB** user_leds);
 
-void ocean_update(CRGB* user_leds);
+void ocean_update(CRGBSet& user_leds);
 
 void pacifica_loop();
 

@@ -13,13 +13,9 @@ CRGBPalette16 pacifica_palette_3 =
 
 CRGB* user_buffer;
 
-void ocean_init(CRGB** user_leds) {
-    user_buffer = *user_leds;
-}
-
-
-void ocean_update(){
+void ocean_update(CRGB* user_leds){
   
+  user_buffer = user_leds;
   EVERY_N_MILLISECONDS( 20) {
     pacifica_loop();
     //FastLED.show();

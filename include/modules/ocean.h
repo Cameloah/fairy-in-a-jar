@@ -36,9 +36,9 @@ FASTLED_USING_NAMESPACE
 // the waters off the southern coast of California, https://goo.gl/maps/QQgd97jjHesHZVxQ7
 //
 
-void ocean_init(CRGB** user_leds);
+//void ocean_init(CRGB** user_leds);
 
-void ocean_update();
+void ocean_update(CRGB* user_leds);
 
 void pacifica_loop();
 

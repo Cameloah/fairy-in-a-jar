@@ -20,10 +20,12 @@ CRGBArray<LED_NUM> led_arr;
 
 #define PIN_SWITCH                            3
 
-#define EFFECT_DURATION_SEC                   10
-#define EFFECT_BLEND_IN_SEC                   5
+#define EFFECT_DURATION_SEC                   60
+#define EFFECT_BLEND_IN_SEC                   10
 
 uint8_t module_current_index;
+CRGBArray<LED_NUM> led_arr_current;
+CRGBArray<LED_NUM> led_arr_next;
 #define EFFECT_MODULE_NUM                     2
 void (*module_update[EFFECT_MODULE_NUM])(CRGBSet&) = {
         ocean_update,
@@ -33,7 +35,7 @@ void (*module_update[EFFECT_MODULE_NUM])(CRGBSet&) = {
 
 void setup() {
   //initialize serial communication
-  Serial.begin(250000);
+  Serial.begin(9600);
 
   //periferals
   pinMode(PIN_SWITCH, INPUT);
@@ -57,24 +59,34 @@ void setup() {
   FastLED.show(); 
 }
 
-
+uint8_t blend_opacity = 0;
 
 void loop() {
 
   switch(digitalRead(PIN_SWITCH)) {
     case HIGH:
-      //music_vis_update(led_arr);
-      ocean_update(led_arr);
+      music_vis_update(led_arr);
       break;
 
     case LOW:
-      //twinkle_update(led_arr);
-
-      EVERY_N_SECONDS(EFFECT_DURATION_SEC) {
-        module_current_index = addmod8( module_current_index, 1, EFFECT_MODULE_NUM);
-      }
+      EVERY_N_MILLISECONDS( 20) {
+        EVERY_N_SECONDS(EFFECT_DURATION_SEC) {
+          module_current_index = addmod8( module_current_index, 1, EFFECT_MODULE_NUM);
+          blend_opacity = 0;
+        }
       
-      module_update[module_current_index] (led_arr);
+        module_update[module_current_index] (led_arr_current);
+        module_update[addmod8(module_current_index, 1, EFFECT_MODULE_NUM)] (led_arr_next);
+        blend(led_arr_next, led_arr_current, led_arr, LED_NUM, blend_opacity);
+      }
+      if(blend_opacity <= 254) {
+        EVERY_N_MILLISECONDS(EFFECT_BLEND_IN_SEC * 1000 / 255) {
+          blend_opacity++;
+        }
+      }
+    
+      
+      
       break;
 
     default:

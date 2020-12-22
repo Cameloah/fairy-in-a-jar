@@ -25,9 +25,9 @@
 
 typedef struct
 {
-    int r;
-    int g;
-    int b;
+    int16_t r;
+    int16_t g;
+    int16_t b;
 } color_increments_t;
 
 

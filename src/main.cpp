@@ -3,7 +3,6 @@
 #include "modules/music_visualisation.h"
 #include "modules/twinkle.h"
 #include "modules/ocean.h"
-#include "tools/blend.h"
 #include "led_config.h"
 
 
@@ -47,6 +46,7 @@ void setup() {
 
 
   //start up FastLED object
+  //FastLED.addLeds<LED_TYPE, LED_PIN>(led_arr, LED_NUM);
   FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led_arr, LED_NUM).setCorrection(TypicalLEDStrip);
 
   //clear all leds
@@ -56,6 +56,7 @@ void setup() {
     }
 
   //execute led colors
+  Serial.println(sizeof(led_arr));
   FastLED.show(); 
 }
 

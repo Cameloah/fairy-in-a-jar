@@ -1,25 +1,23 @@
 #include "modules/music_visualisation.h"
-
+#include "tools/filters.h"
 
 
 
 //variable microphone input is stored in
-uint32_t sensor_input = 0;
+uint16_t sensor_input = 0;
 
 
 //modified MA filter
-uint32_t inputFiltered = 0;
-uint32_t inputFilteredPrev = 0;
-float multiplicator_prev = 1;
+uint16_t inputFiltered = 0;
   
 //max value envelope
 const uint8_t arr_max_size = 20;
-uint32_t arr_max[arr_max_size];
-uint32_t value_max = 0;
+uint16_t arr_max[arr_max_size];
+uint16_t value_max = 0;
 
 //MA filter
 const uint8_t arr_avg_size = 200;
-uint32_t arr_avg[arr_avg_size];
+uint16_t arr_avg[arr_avg_size];
 double value_avg = 0;
 
 
@@ -60,7 +58,7 @@ void music_vis_update(CRGBSet& leds) {
 
 
     //send microphone value to PC
-    Serial.print(sensor_input);
+    //Serial.print(sensor_input);
 
     //_____filter__________________________________________________________________________________
 
@@ -68,7 +66,7 @@ void music_vis_update(CRGBSet& leds) {
       //reset max value
       value_max = 0;
 
-      for (int i = 0; i < arr_max_size; i++) 
+      for (uint8_t i = 0; i < arr_max_size; i++) 
       {
         //compute max value
         if(value_max < arr_max[i]){
@@ -89,8 +87,7 @@ void music_vis_update(CRGBSet& leds) {
     
 
     //modified MA (moving average) filter
-      inputFiltered = (value_max + (inputFilteredPrev * multiplicator_prev)) / (multiplicator_prev+1);
-      inputFilteredPrev = inputFiltered;
+      inputFiltered = envelopeFilter(value_max, 3);
 
     //MA filter
       value_avg = 0;
@@ -119,6 +116,8 @@ void music_vis_update(CRGBSet& leds) {
     Serial.print(value_max);
     Serial.print("\t");
     Serial.print(value_avg);
+    Serial.print("\t");
+    Serial.print(envelopeFilter(sensor_input, 5));
     Serial.print("\t");
     Serial.println(inputFiltered);
   

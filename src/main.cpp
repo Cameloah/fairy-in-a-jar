@@ -3,6 +3,7 @@
 #include "modules/music_visualisation.h"
 #include "modules/twinkle.h"
 #include "modules/ocean.h"
+#include "modules/fire.h"
 #include "led_config.h"
 
 
@@ -25,10 +26,13 @@ CRGBArray<LED_NUM> led_arr;
 uint8_t module_current_index;
 CRGBArray<LED_NUM> led_arr_current;
 CRGBArray<LED_NUM> led_arr_next;
-#define EFFECT_MODULE_NUM                     2
+
+#define EFFECT_MODULE_NUM                     3
+
 void (*module_update[EFFECT_MODULE_NUM])(CRGBSet&) = {
-        ocean_update,
-        twinkle_update
+        fire_update,
+        twinkle_update,
+        ocean_update
 };
 
 
@@ -48,7 +52,7 @@ void setup() {
   //start up FastLED object
   //FastLED.addLeds<LED_TYPE, LED_PIN>(led_arr, LED_NUM);
   FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led_arr, LED_NUM).setCorrection(TypicalLEDStrip);
-
+  //  FastLED.setBrightness( BRIGHTNESS );
   //clear all leds
     for (int i = 0; i < LED_NUM; i++)
     {
@@ -60,7 +64,7 @@ void setup() {
   FastLED.show(); 
 }
 
-uint8_t blend_opacity = 0;
+uint8_t blend_opacity = 255;
 
 void loop() {
 
@@ -70,7 +74,7 @@ void loop() {
       break;
 
     case LOW:
-      EVERY_N_MILLISECONDS( 20) {
+      EVERY_N_MILLISECONDS(20) {
         EVERY_N_SECONDS(EFFECT_DURATION_SEC) {
           module_current_index = addmod8( module_current_index, 1, EFFECT_MODULE_NUM);
           blend_opacity = 0;
@@ -78,7 +82,7 @@ void loop() {
       
         module_update[module_current_index] (led_arr_current);
         module_update[addmod8(module_current_index, 1, EFFECT_MODULE_NUM)] (led_arr_next);
-        blend(led_arr_next, led_arr_current, led_arr, LED_NUM, blend_opacity);
+        blend(led_arr_current, led_arr_next, led_arr, LED_NUM, blend_opacity);
       }
       if(blend_opacity <= 254) {
         EVERY_N_MILLISECONDS(EFFECT_BLEND_IN_SEC * 1000 / 255) {

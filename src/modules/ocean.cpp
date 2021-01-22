@@ -16,10 +16,8 @@ CRGB* user_buffer;
 void ocean_update(CRGBSet& user_leds){
   
   user_buffer = user_leds;
-  //EVERY_N_MILLISECONDS( 20) {
-    pacifica_loop();
-    //FastLED.show();
-  //}
+  pacifica_loop();
+
 }
 
 void pacifica_loop()

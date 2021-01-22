@@ -27,29 +27,15 @@ uint8_t led_level = 0;
 //number of leds proportional to average sensor input level
 uint8_t led_avg_level = 0;
 
-
-
-//initialize color struct
-color_increments_t color_peak_1;
-color_increments_t color_base_1;
-
 //factor, 8 bit color number is divided by to fade to darkness
 float fade_scale = 1.03;
 
 
-
-
 void music_vis_init() {
     //set color increments
-    color_peak_1.r = PEAK_INC_R;
-    color_peak_1.g = PEAK_INC_G;
-    color_peak_1.b = PEAK_INC_B;
-
-    color_base_1.r = BASE_INC_R;
-    color_base_1.g = BASE_INC_G;
-    color_base_1.b = BASE_INC_B;
 }
 
+uint8_t palette_color = 0;
 
 void music_vis_update(CRGBSet& leds) {
     
@@ -57,8 +43,11 @@ void music_vis_update(CRGBSet& leds) {
     sensor_input = analogRead(ANALOG_READ);
 
 
-    //send microphone value to PC
-    //Serial.print(sensor_input);
+  EVERY_N_MILLISECONDS(200) {palette_color++;}
+
+  if(palette_color > 240) {
+    palette_color = 0;
+  }
 
     //_____filter__________________________________________________________________________________
 
@@ -124,60 +113,19 @@ void music_vis_update(CRGBSet& leds) {
 
     //map sensor value to number of leds
     led_level = map(inputFiltered, 0, 600, 0, LED_NUM);
-    led_avg_level = map(value_avg, 0, 600, 0, LED_NUM) + 4;
+    led_avg_level = map(1.3*value_avg, 0, 600, 0, LED_NUM) + BASE_LED_NUMBER_MIN;
+    
     
     for (int i = 0; i < LED_NUM; i++) {
     //The leds we want to show
-      if (i < led_level && i > led_avg_level) {
-        if (leds[i].r + color_peak_1.r > PEAK_MAX_R)
-          leds[i].r = PEAK_MAX_R;
-        else if (leds[i].r + color_peak_1.r < 0)
-          leds[i].r = 0;
-        else
-          leds[i].r = leds[i].r + color_peak_1.r;
-          
-        if (leds[i].g + color_peak_1.g > PEAK_MAX_G)
-          leds[i].g = PEAK_MAX_G;
-        else if (leds[i].g + color_peak_1.g < 0)
-          leds[i].g = 0;
-        else 
-          leds[i].g = leds[i].g + color_peak_1.g;
+      if (i < led_level && i > led_avg_level)
+        leds[i] = blend(leds[i], ColorFromPalette( PartyColors_p, palette_color, 254, LINEARBLEND), 100);
 
-        if (leds[i].b + color_peak_1.b > PEAK_MAX_B)
-          leds[i].b = PEAK_MAX_B;
-        else if (leds[i].b + color_peak_1.b < 0)
-          leds[i].b = 0;
-        else 
-          leds[i].b = leds[i].b + color_peak_1.b;  
-      }
-
-      else if (i <= led_avg_level) {
-        if (leds[i].r + color_base_1.r > BASE_MAX_R)
-          leds[i].r = BASE_MAX_R;
-        else if (leds[i].r + color_base_1.r < 0)
-          leds[i].r = 0;
-        else
-          leds[i].r = leds[i].r + color_base_1.r;
-          
-        if (leds[i].g + color_base_1.g > BASE_MAX_G)
-          leds[i].g = BASE_MAX_G;
-        else if (leds[i].g + color_base_1.g < 0)
-          leds[i].g = 0;
-        else 
-          leds[i].g = leds[i].g + color_base_1.g;
-
-        if (leds[i].b + color_base_1.b > BASE_MAX_B)
-          leds[i].b = BASE_MAX_B;
-        else if (leds[i].b + color_base_1.b < 0)
-          leds[i].b = 0;
-        else 
-          leds[i].b = leds[i].b + color_base_1.b;
-      }
-
+      else if (i <= led_avg_level)
+        leds[i] = blend(leds[i], CRGB::Purple, 40);
 
       //All the other LEDs fade to eventual total darkness
-      else {
+      else 
         leds[i] = CRGB(leds[i].r/fade_scale, leds[i].g/fade_scale, leds[i].b/fade_scale);
-      }
     }
 }

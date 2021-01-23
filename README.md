@@ -33,6 +33,30 @@ To solve this soultion, a DC-DC isolator was added to provide an isolated power 
 For this build, a simple 5V USB Smartphone charger was used. A 200 uF electrolyte capacitor was added at the power input to increase the supply's stability and decrease higher frequency harmonic noise.
 
 ## How to port this Code to Your Project
+1. **Get the Files!** It is most convenient to use the same IDE: VSC with the Platformio extension. *More Information:* https://platformio.org/install/ide?install=vscode. Download the project files or clone into this project.
+
+2. **Port to your Arduino Board!** Change the configuration in `/platformio.ini` according to your arduino board.
+
+3. **Set your LED configuration!** Navigate to `/include/led_config.h` and check the pin you're using on the arduino, the number of your LEDs and the type of your LEDs.
+
+4. **Configure the microphone input!** Navigate to `/include/music_visualisation.h` and check the pin the analog signal of the microphone is connected to your arduino.
+
+5. **Flash your Arduino!"** You can now upload the code to your MCU and enjoy the show.
+
+### Ambient Light Mode
+When you pull D3 on your MCU low, the programm enters Ambient Light Mode.  
+In this mode, the main loop cycles through a list of color animations `module_update`. There are 3 prebuilt animation modules `fire_update,  
+twinkle_update,  
+ocean_update`  
+Here, you can add or remove animations as you like. Just dont forget to change the number of modules in the list `EFFECT_MODULE_NUM`. You can change the duration an animation is active, by changing `EFFECT_DURATION_SEC`. The time it takes to blend from one animation to the next, can be set in `EFFECT_BLEND_IN_SEC`.
+
+### Music Visualisation Mode
+Pull D3 high on your MCU to enter Music Visualisation Mode. If everything is set correctly, the microphone can be placed in proximity of a speaker. The LEDs will react to the music.
+
+Good Luck with your own project and have fun!  
+
+Cheers, Cameloah
+
 
 
 

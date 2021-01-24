@@ -20,8 +20,8 @@ CRGBArray<LED_NUM> led_arr;
 
 #define PIN_SWITCH                            3
 
-#define EFFECT_DURATION_SEC                   60
-#define EFFECT_BLEND_IN_SEC                   10
+#define EFFECT_DURATION_SEC                   300
+#define EFFECT_BLEND_IN_SEC                   20
 
 uint8_t module_current_index;
 CRGBArray<LED_NUM> led_arr_current;

@@ -9,6 +9,7 @@ In this project I wanted to minimize the form factor and simplify the components
 
 MCU: Arduino Nano  
 Sound-Sensor: Sound Detector by RoboDyn  
+DC-DC Isolator: B053S 1W  
 LEDs: WS2812b  
 number of LEDs: 18  
 current consumption: ~1A DC
@@ -27,7 +28,7 @@ This type of LEDs draws a maximum of 60 mA at full White brightness. Powering th
 
 ### Microphone Module
 Depending on the quality of the LEDs, they also might interfer with the microphone module. Lighting up a number of LEDs depending on the microphone input amplitude therefore can result in unpredictable feedback.  
-To solve this issue, a DC-DC isolator was added to provide an isolated power source for the microphone module. The GND was still commonly grounded with the MCU
+To solve this issue, a DC-DC isolator (B053S 1W) was added to provide an isolated power source for the microphone module. The GND was still commonly grounded with the MCU
 
 ### Power Supply
 For this build, a simple 5V USB Smartphone charger was used. A 200 uF electrolyte capacitor was added at the power input to increase the supply's stability and decrease higher frequency harmonic noise.

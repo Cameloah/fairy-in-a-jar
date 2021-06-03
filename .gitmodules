@@ -1,0 +1,3 @@
+[submodule "common_lib_wifiLight"]
+	path = common_lib_wifiLight
+	url = git@github.com:Cameloah/common_lib_wifiLight.git

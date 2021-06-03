@@ -1,7 +1,6 @@
 #include "modules/fire.h"
 #include "led_config.h"
 
-
 bool gReverseDirection = false;
 
   // This first palette is the basic 'black body radiation' colors,
@@ -21,7 +20,7 @@ CRGBPalette16 gPal = HeatColors_p;
 void fire_update(CRGBSet& leds)
 {
   FastLED.delay(1000 / FRAMES_PER_SECOND);
-  random16_add_entropy( random());
+  random16_add_entropy( random16());
     // Fourth, the most sophisticated: this one sets up a new palette every
   // time through the loop, based on a hue that changes every time.
   // The palette is a gradient from black, to a dark color based on the hue,

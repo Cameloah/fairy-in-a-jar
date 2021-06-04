@@ -11,14 +11,14 @@
   int timer_size = 5000;
   int loop_timer = 0;
   float loop_time = 0;
-  int timer_start = 0;
+  // int timer_start = 0;
 
   
 //create the FastLED array containing led colors
 CRGBArray<LED_NUM> led_arr;
 //CRGB leds[LED_NUM];
 
-#define PIN_SWITCH                            3
+#define PIN_SWITCH                            4
 
 #define EFFECT_DURATION_SEC                   300
 #define EFFECT_BLEND_IN_SEC                   20
@@ -30,9 +30,9 @@ CRGBArray<LED_NUM> led_arr_next;
 #define EFFECT_MODULE_NUM                     3
 
 void (*module_update[EFFECT_MODULE_NUM])(CRGBSet&) = {
-        fire_update,
         twinkle_update,
-        ocean_update
+        ocean_update,
+        fire_update
 };
 
 

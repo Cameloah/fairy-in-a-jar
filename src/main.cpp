@@ -6,17 +6,19 @@
 #include "modules/fire.h"
 #include "led_config.h"
 
+#ifdef ESP32
+    #include "wifilight.h"  // the wifi light feature requires a ESP32 development board
+#endif
 
 //_______loop timer______________________________________________________________________________
   int timer_size = 5000;
   int loop_timer = 0;
   float loop_time = 0;
-  // int timer_start = 0;
+  double timer_start_debug = 0;
 
-  
+
 //create the FastLED array containing led colors
 CRGBArray<LED_NUM> led_arr;
-//CRGB leds[LED_NUM];
 
 #define PIN_SWITCH                            4
 
@@ -37,82 +39,87 @@ void (*module_update[EFFECT_MODULE_NUM])(CRGBSet&) = {
 
 
 void setup() {
-  //initialize serial communication
-  Serial.begin(9600);
+    //initialize serial communication
+    Serial.begin(9600);
 
-  //periferals
-  pinMode(PIN_SWITCH, INPUT);
+    //peripherals
+    pinMode(PIN_SWITCH, PULLDOWN);
 
-  //initialize music visualisation
-  music_vis_init();
-  //initialize effect modules
-  twinkle_init();
+    //start up FastLED class
+    FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led_arr, LED_NUM).setCorrection(TypicalLEDStrip);
+    //clear all leds
+    led_arr = CRGB::Black;
 
+#ifdef ESP32
+    // init wifi module
+    wifilight_init(led_arr);
+#endif
 
-  //start up FastLED object
-  //FastLED.addLeds<LED_TYPE, LED_PIN>(led_arr, LED_NUM);
-  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(led_arr, LED_NUM).setCorrection(TypicalLEDStrip);
-  //  FastLED.setBrightness( BRIGHTNESS );
-  //clear all leds
-    for (int i = 0; i < LED_NUM; i++)
-    {
-      led_arr[i] = CRGB(0, 0, 0);
-    }
+    //initialize music visualisation
+    music_vis_init();
+    twinkle_init();
 
-  //execute led colors
-  Serial.println(sizeof(led_arr));
-  FastLED.show(); 
+    //execute led colors
+    FastLED.show();
 }
 
 uint8_t blend_opacity = 255;
 
 void loop() {
 
-  switch(digitalRead(PIN_SWITCH)) {
-    case HIGH:
-      music_vis_update(led_arr);
-      break;
+#ifdef ESP32
+    // run wifi update routine
+    wifilight_update();
 
-    case LOW:
-      EVERY_N_MILLISECONDS(20) {
-        EVERY_N_SECONDS(EFFECT_DURATION_SEC) {
-          module_current_index = addmod8( module_current_index, 1, EFFECT_MODULE_NUM);
-          blend_opacity = 0;
-        }
-      
-        module_update[module_current_index] (led_arr_current);
-        module_update[addmod8(module_current_index, 1, EFFECT_MODULE_NUM)] (led_arr_next);
-        blend(led_arr_current, led_arr_next, led_arr, LED_NUM, blend_opacity);
-      }
-      if(blend_opacity <= 254) {
-        EVERY_N_MILLISECONDS(EFFECT_BLEND_IN_SEC * 1000 / 255) {
-          blend_opacity++;
-        }
-      }
-    
-      
-      
-      break;
+    if(lights[0].lightState == false) {
+        //clear all leds
+        led_arr = CRGB::Black;
+        FastLED.show();
+        return;
+    }
+#endif
 
-    default:
-      return;
-  }
-  
+    switch(digitalRead(PIN_SWITCH)) {
+        case HIGH:
+            music_vis_update(led_arr);
+            break;
 
-  //execute led colors
-  FastLED.show();
-    
-  //_____loop timer______________________________________________________________________________
+        case LOW:
+            EVERY_N_MILLISECONDS(20) {
+                EVERY_N_SECONDS(EFFECT_DURATION_SEC) {
+                    module_current_index = addmod8( module_current_index, 1, EFFECT_MODULE_NUM);
+                    blend_opacity = 0;
+                }
 
-    /*loop_timer++;
+                module_update[module_current_index] (led_arr_current);
+                module_update[addmod8(module_current_index, 1, EFFECT_MODULE_NUM)] (led_arr_next);
+                blend(led_arr_current, led_arr_next, led_arr, LED_NUM, blend_opacity);
+            }
+            if(blend_opacity <= 254) {
+                EVERY_N_MILLISECONDS(EFFECT_BLEND_IN_SEC * 1000 / 255) {
+                    blend_opacity++;
+                }
+            }
+            break;
+
+        default:
+            return;
+    }
+
+    //execute led colors
+    FastLED.show();
+
+    //_____loop timer______________________________________________________________________________
+
+    loop_timer++;
 
     if(loop_timer == timer_size){
-      loop_time = millis() - timer_start;
-      loop_time = loop_time / timer_size;
-      Serial.println(loop_time);
-      loop_timer = 0;
-      loop_time = 0;
-      timer_start = millis();
-    }*/
-  
+        loop_time = millis() - timer_start_debug;
+        loop_time = loop_time / timer_size;
+        Serial.println(loop_time);
+        loop_timer = 0;
+        loop_time = 0;
+        timer_start_debug = millis();
+    }
+
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/common_lib_wifiLight" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/common_libs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/common_libs/common_lib_wifiLight" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/custom_libs/common_lib_wifiLight" vcs="Git" />
+  </component>
+</project>

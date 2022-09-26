@@ -7,7 +7,7 @@ In this project I wanted to minimize the form factor and simplify the components
 
 ## Hardware
 
-MCU: Arduino Nano  
+MCU: Arduino Nano or ESP32 for WiFi support
 Sound-Sensor: Sound Detector by RoboDyn  
 DC-DC Isolator: B053S 1W  
 LEDs: WS2812b  
@@ -16,7 +16,7 @@ current consumption: ~1A DC
 
 ## Software
 
-IDE: Visual Studio Code, Platformio extension  
+IDE: Visual Studio Code or CLion, Platformio extension  
 Controlling of the LEDs using the FastLED library by Daniel Garcia
 
 ## Electronic Circuit
@@ -24,7 +24,7 @@ Controlling of the LEDs using the FastLED library by Daniel Garcia
 ### RGB LEDs
 Some of the cheaper options of the RGB led WS2812b are quite unstable in their data connection which can result in flickering due to missinterpretation of the signal.  
 This issue was solved by adding a 100nF capacitor in close proximity to every LED.  
-This type of LEDs draws a maximum of 60 mA at full White brightness. Powering the LEDs using the arduino 5V output is therefore not recommended.  
+This type of LEDs draws a maximum of 60 mA at full white brightness. Powering the LEDs using the arduino or ESP32 5V output is therefore not recommended.  
 
 ### Microphone Module
 Depending on the quality of the LEDs, they also might interfer with the microphone module. Lighting up a number of LEDs depending on the microphone input amplitude therefore can result in unpredictable feedback.  
@@ -34,15 +34,15 @@ To solve this issue, a DC-DC isolator (B053S 1W) was added to provide an isolate
 For this build, a simple 5V USB Smartphone charger was used. A 200 uF electrolyte capacitor was added at the power input to increase the supply's stability and decrease higher frequency harmonic noise.
 
 ## How to port this Code to Your Project
-1. **Get the Files!** It is most convenient to use the same IDE: VSC with the Platformio extension. *More Information:* https://platformio.org/install/ide?install=vscode. Download the project files or clone into this project.
+1. **Get the Files!** It is most convenient to use the same IDE: VSC or CLion with the Platformio extension. *More Information:* https://platformio.org/install/ide?install=vscode. Download the project files or clone into this project.
 
-2. **Port to your Arduino Board!** Change the configuration in `/platformio.ini` according to your arduino board.
+2. **Port to your MCU Board!** Change the configuration in `/platformio.ini` according to your arduino board. This project also supports the ESP32 which enables the light to be controlled via WiFi.
 
 3. **Set your LED configuration!** Navigate to `/include/led_config.h` and check the pin you're using on the arduino, the number of your LEDs and the type of your LEDs.
 
-4. **Configure the microphone input!** Navigate to `/include/music_visualisation.h` and check the pin the analog signal of the microphone is connected to your arduino.
+4. **Configure the microphone input!** Navigate to `/include/music_visualisation.h` and check the pin the analog signal of the microphone is connected to your arduino or ESP32.
 
-5. **Flash your Arduino!"** You can now upload the code to your MCU and enjoy the show.
+5. **Flash your MCU!"** You can now upload the code to your MCU and enjoy the show.
 
 ### Ambient Light Mode
 When you pull D3 on your MCU low, the programm enters Ambient Light Mode.  
